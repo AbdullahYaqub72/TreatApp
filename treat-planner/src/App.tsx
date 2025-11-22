@@ -42,15 +42,13 @@ function AppRoutes() {
     <Routes>
       <Route
         path="/login"
-        element={currentUser ? <Navigate to="/" replace /> : <LoginPage />}
+        element={currentUser ? <Navigate to="/all-treats" replace /> : <LoginPage />}
       />
       <Route
         path="/"
         element={
           <ProtectedRoute>
-            <Layout>
-              <DashboardPage />
-            </Layout>
+            <Navigate to="/all-treats" replace />
           </ProtectedRoute>
         }
       />
@@ -94,7 +92,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/all-treats" replace />} />
     </Routes>
   );
 }
