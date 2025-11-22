@@ -8,12 +8,14 @@ import { CreateEventDialog } from '@/components/CreateEventDialog';
 import { EventCard } from '@/components/EventCard';
 import { ArrowLeft, Calendar, Users, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { useAuth } from '@/context/AuthContext';
 
 export function DayPlanDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { dayPlan, loading: planLoading } = useDayPlan(id);
   const { events, loading: eventsLoading } = useEvents(id);
+  const { isAuthorized } = useAuth();
 
   if (planLoading || eventsLoading) {
     return (
@@ -98,7 +100,7 @@ export function DayPlanDetailPage() {
           <h2 className="text-2xl font-bold text-slate-800">
             Events {events.length > 0 && `(${events.length})`}
           </h2>
-          {dayPlan.members.length > 0 && <CreateEventDialog dayPlanId={dayPlan.id} members={dayPlan.members} />}
+          {isAuthorized && dayPlan.members.length > 0 && <CreateEventDialog dayPlanId={dayPlan.id} members={dayPlan.members} />}
         </div>
 
         {dayPlan.members.length === 0 ? (
@@ -115,7 +117,7 @@ export function DayPlanDetailPage() {
               <Calendar className="h-12 w-12 text-slate-300 mx-auto mb-3" />
               <p className="font-medium mb-1">No events yet</p>
               <p className="text-sm mb-4">Create your first event to start planning!</p>
-              <CreateEventDialog dayPlanId={dayPlan.id} members={dayPlan.members} />
+              {isAuthorized && <CreateEventDialog dayPlanId={dayPlan.id} members={dayPlan.members} />}
             </div>
           </Card>
         ) : (

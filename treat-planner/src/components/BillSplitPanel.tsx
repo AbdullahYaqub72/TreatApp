@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DollarSign, Save } from 'lucide-react';
 import { useEvents } from '@/hooks/useEvents';
+import { useAuth } from '@/context/AuthContext';
 import type { Member, RSVPStatus } from '@/types';
 
 interface BillSplitPanelProps {
@@ -17,6 +18,7 @@ interface BillSplitPanelProps {
 
 export function BillSplitPanel({ eventId, totalBill, members, rsvps, dayPlanId }: BillSplitPanelProps) {
   const { updateBill } = useEvents(dayPlanId);
+  const { isAuthorized } = useAuth();
   const [editMode, setEditMode] = useState(!totalBill);
   const [billAmount, setBillAmount] = useState(totalBill.toString());
   const [selectedAttendees, setSelectedAttendees] = useState<string[]>(
@@ -41,10 +43,12 @@ export function BillSplitPanel({ eventId, totalBill, members, rsvps, dayPlanId }
       <Card className="p-4">
         <h3 className="font-semibold mb-2">Bill Split</h3>
         <p className="text-sm text-slate-600 mb-3">No bill amount set yet.</p>
-        <Button size="sm" onClick={() => setEditMode(true)} className="bg-emerald-600 hover:bg-emerald-700">
-          <DollarSign className="h-4 w-4 mr-1" />
-          Set Bill Amount
-        </Button>
+        {isAuthorized && (
+          <Button size="sm" onClick={() => setEditMode(true)} className="bg-emerald-600 hover:bg-emerald-700">
+            <DollarSign className="h-4 w-4 mr-1" />
+            Set Bill Amount
+          </Button>
+        )}
       </Card>
     );
   }
@@ -53,7 +57,7 @@ export function BillSplitPanel({ eventId, totalBill, members, rsvps, dayPlanId }
     <Card className="p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold">Bill Split</h3>
-        {!editMode && (
+        {isAuthorized && !editMode && (
           <Button size="sm" variant="outline" onClick={() => setEditMode(true)}>
             Edit
           </Button>

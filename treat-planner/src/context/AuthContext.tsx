@@ -102,14 +102,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      
-      // Check if user is authorized
-      if (!AUTHORIZED_EMAILS.includes(result.user.email || '')) {
-        await firebaseSignOut(auth);
-        alert('Access Denied: Only authorized users (abdullahyaqub555@gmail.com or 2020cs72@gmail.com) can sign in.');
-        throw new Error('Unauthorized email');
-      }
+      await signInWithPopup(auth, provider);
+      // All users can now sign in - authorization is checked separately for add/edit permissions
     } catch (error: any) {
       console.error('Error signing in with Google:', error);
       if (error.code === 'auth/unauthorized-domain') {

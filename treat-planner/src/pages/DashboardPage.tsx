@@ -32,7 +32,7 @@ interface DayPlanStats {
 }
 
 export function DashboardPage() {
-  const { currentUser } = useAuth();
+  const { currentUser, isAuthorized } = useAuth();
   const { dayPlans, loading } = useDayPlans(currentUser?.uid);
   const [planStats, setPlanStats] = useState<Record<string, DayPlanStats>>({});
   const [statsLoading, setStatsLoading] = useState(true);
@@ -195,7 +195,7 @@ export function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-        <CreateDayPlanDialog />
+        {isAuthorized && <CreateDayPlanDialog />}
       </>
     );
   }
@@ -436,7 +436,7 @@ export function DashboardPage() {
         </div>
       )}
 
-      <CreateDayPlanDialog />
+      {isAuthorized && <CreateDayPlanDialog />}
     </>
   );
 }
